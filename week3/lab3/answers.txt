@@ -1,0 +1,23 @@
+sort1 uses: bubble sort
+
+How do you know?: because, while it had a greater loss in performance
+when applied to the random and reversed files, it performed the best when
+applied to the sorted files. My best hypotesis to explain this 
+is that the program didn't have to iterate over sorted files as many times
+as the other programs did. I assume that it hat to check the values only once,
+and when it determined that the contents where already sorted, it quit.
+This is a noticeable behavior in the buble sort algorithm.
+
+sort2 uses: merge sort
+
+How do you know?: Because the time needed to check through the files didn't grow
+as much as it did in other programs as the files got bigger. This program
+had a better performance over the input growth, which is a characteristc of the
+merge sorting algorithm.
+
+sort3 uses: selection sort
+
+How do you know?: Well, it was the only alternative left xD
+We can see that the program didn't benefit for the lists being already sort.
+That means that it performed the same (or just slightly different) amount of
+operations per item in the lists. This is a characteristc of the selection sort algorithm.

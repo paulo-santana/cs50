@@ -1,0 +1,37 @@
+notes
+
+./sort1 random5000.txt:     0m0.081s
+./sort1 random10000.txt:    0m0.437s
+./sort1 random50000.txt:    0m15.761s
+
+./sort1 sorted5000.txt:     0m0.011s
+./sort1 sorted10000.txt:    0m0.017s
+./sort1 sorted50000.txt:    0m3.846s
+
+./sort1 reversed5000.txt:   0m0.057s
+./sort1 reversed10000.txt:  0m0.414s
+./sort1 reversed50000.txt:  0m12.091s
+
+./sort2 random5000.txt:     0m0.012s
+./sort2 random10000.txt:    0m0.060s
+./sort2 random50000.txt:    0m4.342s
+
+./sort2 sorted5000.txt:     0m0.013s
+./sort2 sorted10000.txt:    0m0.020s
+./sort2 sorted50000.txt:    0m4.425s
+
+./sort2 reversed5000.txt:   0m0.010s
+./sort2 reversed10000.txt:  0m0.025s
+./sort2 reversed50000.txt:  0m5.091s
+
+./sort3 random5000.txt:     0m0.033s
+./sort3 random10000.txt:    0m0.155s
+./sort3 random50000.txt:    0m11.561s
+
+./sort3 sorted5000.txt:     0m0.034s
+./sort3 sorted10000.txt:    0m0.157s
+./sort3 sorted50000.txt:    0m8.025s
+
+./sort3 reversed5000.txt:   0m0.035s
+./sort3 reversed10000.txt:  0m0.218s
+./sort3 reversed50000.txt:  0m9.342s
