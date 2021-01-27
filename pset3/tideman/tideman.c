@@ -34,6 +34,8 @@ void sort_pairs(void);
 void lock_pairs(void);
 void print_winner(void);
 
+bool createsCycle(int target, int start);
+
 int main(int argc, string argv[])
 {
     // Check for invalid usage
@@ -181,13 +183,65 @@ void sort_pairs(void)
 // Lock pairs into the candidate graph in order, without creating cycles
 void lock_pairs(void)
 {
-    // TODO
+    // for each winner in the pairs array, we should create an edge that points to the loser
+    // but before creating an edge in the graph, we should check if this edge
+    // would create a cycle that points to the current winner
+    for (int i = 0; i < pair_count; i++)
+    {
+        int winner = pairs[i].winner;
+        int loser = pairs[i].loser;
+        
+        if (!createsCycle(winner, loser))
+        {
+            locked[winner][loser] = true;
+        }
+    }
     return;
+}
+
+// checks if the locked matrix has a path that points
+// from start to targed
+bool createsCycle(int target, int start)
+{
+    if (start == target)
+        return true;
+    
+    bool foundCycle = false;
+    for (int i = 0; i < candidate_count; i++)
+    {
+        // follow everyone that start has beaten to see if they lead to target
+        if (locked[start][i])
+        {
+            if(createsCycle(target, i))
+            {
+                foundCycle = true;
+            }
+        }
+    }
+
+    // if it didn't beat anyone, it definetly won't create a cycle
+    return foundCycle;
 }
 
 // Print the winner of the election
 void print_winner(void)
 {
-    // TODO
+    for (int i = 0; i < candidate_count; i++)
+    {
+        bool lost = false;
+        for (int j = 0; j < candidate_count; j++)
+        {
+            // if it's locked, dude lost. Check the next one
+            if (locked[j][i])
+            {
+                lost = true;
+                break;
+            }
+        }
+        if (!lost)
+        {
+            printf("%s\n", candidates[i]);
+        }
+    }
     return;
 }
