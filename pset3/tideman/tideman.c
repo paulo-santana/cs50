@@ -153,7 +153,28 @@ void add_pairs(void)
 // Sort pairs in decreasing order by strength of victory
 void sort_pairs(void)
 {
-    // TODO
+    for (int i = 0; i < pair_count; i++)
+    {
+        // get the "strength" of the victory by the difference of preferences
+        // sort the pairs using the bubble sort algorithm
+        for (int j = 0; j < pair_count - i; j++)
+        {
+            int winnerPrefs = preferences[pairs[j].winner][pairs[j].loser];
+            int loserPrefs = preferences[pairs[j].loser][pairs[j].winner];
+            int difference = winnerPrefs - loserPrefs;
+
+            int nextWinnerPrefs = preferences[pairs[j + 1].winner][pairs[j + 1].loser];
+            int nextLoserPrefs = preferences[pairs[j + 1].loser][pairs[j + 1].winner];
+            int nextDifference = nextWinnerPrefs - nextLoserPrefs;
+
+            if (difference < nextDifference)
+            {
+                pair tmpPair = pairs[j];
+                pairs[j] = pairs[j + 1];
+                pairs[j + 1] = tmpPair;
+            }
+        }
+    }
     return;
 }
 
@@ -170,4 +191,3 @@ void print_winner(void)
     // TODO
     return;
 }
-
