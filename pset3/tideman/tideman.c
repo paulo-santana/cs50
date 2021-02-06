@@ -157,6 +157,7 @@ void sort_pairs(void)
 {
     for (int i = 0; i < pair_count; i++)
     {
+        int swapped = 0;
         // get the "strength" of the victory by the difference of preferences
         // sort the pairs using the bubble sort algorithm
         for (int j = 0; j < pair_count - i; j++)
@@ -174,7 +175,12 @@ void sort_pairs(void)
                 pair tmpPair = pairs[j];
                 pairs[j] = pairs[j + 1];
                 pairs[j + 1] = tmpPair;
+                swapped = 1;
             }
+        }
+        if (!swapped)
+        {
+            break;
         }
     }
     return;
@@ -190,7 +196,7 @@ void lock_pairs(void)
     {
         int winner = pairs[i].winner;
         int loser = pairs[i].loser;
-        
+
         if (!createsCycle(winner, loser))
         {
             locked[winner][loser] = true;
@@ -205,7 +211,7 @@ bool createsCycle(int target, int start)
 {
     if (start == target)
         return true;
-    
+
     bool foundCycle = false;
     for (int i = 0; i < candidate_count; i++)
     {
