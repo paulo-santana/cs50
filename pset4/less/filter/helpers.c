@@ -49,6 +49,19 @@ void sepia(int height, int width, RGBTRIPLE image[height][width])
 // Reflect image horizontally
 void reflect(int height, int width, RGBTRIPLE image[height][width])
 {
+    // the 2nd half of the image will already be mirrored by the time we reach it
+    // if width is an odd number, we can discard the middle pixel as it wont need to change places with anyone
+    int halfPixel = width / 2;
+
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < halfPixel; j++)
+        {
+            RGBTRIPLE leftPixel = image[i][j];
+            image[i][j] = image[i][width - 1 - j];
+            image[i][width - 1 - j] = leftPixel;
+        }
+    }
     return;
 }
 
