@@ -1,4 +1,5 @@
 #include <math.h>
+#include <stdio.h>
 #include "helpers.h"
 
 void arrCopy(int size, RGBTRIPLE *arr, RGBTRIPLE *target);
@@ -108,7 +109,9 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
         arrCopy(width, currentRow, rowAbove);
         arrCopy(width, rowBelow, currentRow);
         if (i < height - 1)
+        {
             arrCopy(width, image[i + 2], rowBelow);
+        }
     }
     return;
 }
@@ -116,6 +119,116 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
 // Detect edges
 void edges(int height, int width, RGBTRIPLE image[height][width])
 {
+    RGBTRIPLE rowAbove[width], currentRow[width], rowBelow[width];
+    arrCopy(width, image[0], currentRow);
+    arrCopy(width, image[1], rowBelow);
+
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            if (i == 2 && j == 3)
+            {
+                printf("chegou");
+            }
+            // compute Gx
+            // row above
+            int GxRed = 0, GxGreen = 0, GxBlue = 0,
+                GyRed = 0, GyGreen = 0, GyBlue = 0;
+
+            int left = j - 1,
+                right = j + 1;
+
+            // Will only have a row above if it's not the first line
+            if (i > 0)
+            {
+                GyRed += (rowAbove[j].rgbtRed * -2);
+                GyGreen += (rowAbove[j].rgbtGreen * -2);
+                GyBlue += (rowAbove[j].rgbtBlue * -2);
+
+                if (left >= 0)
+                {
+                    GxRed += (rowAbove[left].rgbtRed * -1);
+                    GxGreen += (rowAbove[left].rgbtGreen * -1);
+                    GxBlue += (rowAbove[left].rgbtBlue * -1);
+
+                    GyRed += (rowAbove[left].rgbtRed * -1);
+                    GyGreen += (rowAbove[left].rgbtGreen * -1);
+                    GyBlue += (rowAbove[left].rgbtBlue * -1);
+                }
+
+                if (right < width)
+                {
+                    GxRed += rowAbove[right].rgbtRed;
+                    GxGreen += rowAbove[right].rgbtGreen;
+                    GxBlue += rowAbove[right].rgbtBlue;
+
+                    GyRed += rowAbove[right].rgbtRed * -1;
+                    GyGreen += rowAbove[right].rgbtGreen * -1;
+                    GyBlue += rowAbove[right].rgbtBlue * -1;
+                }
+            }
+
+            if (left >= 0)
+            {
+                GxRed += (currentRow[left].rgbtRed * -2);
+                GxGreen += (currentRow[left].rgbtGreen * -2);
+                GxBlue += (currentRow[left].rgbtBlue * -2);
+            }
+
+            if (right < width)
+            {
+                GxRed += currentRow[right].rgbtRed * 2;
+                GxGreen += currentRow[right].rgbtGreen * 2;
+                GxBlue += currentRow[right].rgbtBlue * 2;
+            }
+
+            // Will only have a row below if it's not the last line
+            if (i < height - 1)
+            {
+                GyRed += (rowBelow[j].rgbtRed * 2);
+                GyGreen += (rowBelow[j].rgbtGreen * 2);
+                GyBlue += (rowBelow[j].rgbtBlue * 2);
+
+                if (left >= 0)
+                {
+                    GxRed += (rowBelow[left].rgbtRed * -1);
+                    GxGreen += (rowBelow[left].rgbtGreen * -1);
+                    GxBlue += (rowBelow[left].rgbtBlue * -1);
+
+                    GyRed += (rowBelow[left].rgbtRed);
+                    GyGreen += (rowBelow[left].rgbtGreen);
+                    GyBlue += (rowBelow[left].rgbtBlue);
+                }
+
+                if (right < width)
+                {
+                    GxRed += rowBelow[right].rgbtRed;
+                    GxGreen += rowBelow[right].rgbtGreen;
+                    GxBlue += rowBelow[right].rgbtBlue;
+
+                    GyRed += (rowBelow[right].rgbtRed);
+                    GyGreen += (rowBelow[right].rgbtGreen);
+                    GyBlue += (rowBelow[right].rgbtBlue);
+                }
+            }
+            int newChannel = round(sqrt(pow(GxRed, 2) + pow(GyRed, 2)));
+            image[i][j].rgbtRed = newChannel > 255 ? 255 : newChannel;
+
+            newChannel = round(sqrt(pow(GxGreen, 2) + pow(GyGreen, 2)));
+            image[i][j].rgbtGreen = newChannel > 255 ? 255 : newChannel;
+
+            newChannel = round(sqrt(pow(GxBlue, 2) + pow(GyBlue, 2)));
+            image[i][j].rgbtBlue = newChannel > 255 ? 255 : newChannel;
+        }
+        arrCopy(width, currentRow, rowAbove);
+        arrCopy(width, rowBelow, currentRow);
+
+        if (i < height - 1)
+        {
+            arrCopy(width, image[i + 2], rowBelow);
+        }
+    }
     return;
 }
 
