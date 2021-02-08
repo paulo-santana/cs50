@@ -13,8 +13,7 @@ pset3/tideman/tideman
 pset4/less/filter/filter
 pset4/less/filter/out.bmp
 .local
-pset4/less/filter/images/download.bmp
-pset4/less/filter/images/test-blur.bmp
-pset4/more/filter/filter
-pset4/more/filter/images/
-pset4/more/filter/out.bmp
+pset4/filter/less/filter
+pset4/filter/less/out.bmp
+pset4/filter/more/filter
+pset4/filter/more/out.bmp
