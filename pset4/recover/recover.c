@@ -5,7 +5,7 @@ int main(int argc, char *argv[])
 {
     if (argc != 2)
     {
-        printf("Usage: ./recover file-name.raw\n");
+        printf("Usage: ./recover image\n");
         return 1;
     }
 
