@@ -44,58 +44,37 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
 // Blur image
 void blur(int height, int width, RGBTRIPLE image[height][width])
 {
-    RGBTRIPLE rowAbove[width], currentRow[width], rowBelow[width];
-    arrCopy(width, image[0], currentRow);
-    arrCopy(width, image[1], rowBelow);
+    RGBTRIPLE rowsCopy[3][width];
+    arrCopy(width, image[0], rowsCopy[1]);
+    arrCopy(width, image[1], rowsCopy[2]);
+    int invalidRow = 0;
+    // loop through each line
     for (int i = 0; i < height; i++)
     {
-
+        // for each pixel
         for (int j = 0; j < width; j++)
         {
-            int totalRed = 0,
-                totalGreen = 0,
-                totalBlue = 0;
             int pixelCount = 0;
-
-            // loop through the current pixel's neighbours
-            // neighbours above
-            if (i > 0)
+            int totalRed = 0, totalGreen = 0, totalBlue = 0;
+            // workking with the three copies, the rows above, current and below
+            for (int n = 0; n < 3; n++)
             {
-                for (int n = -1; n <= 1; n++)
+                // check if the current row we are working with is valid
+                if (n != invalidRow)
                 {
-                    if (j + n >= 0 && j + n < width)
+                    for (int l = -1; l <= 1; l++)
                     {
-                        totalRed += rowAbove[j + n].rgbtRed;
-                        totalGreen += rowAbove[j + n].rgbtGreen;
-                        totalBlue += rowAbove[j + n].rgbtBlue;
-                        pixelCount++;
-                    }
-                }
-            }
-
-            // neighbours in the middle including itself
-            for (int n = -1; n <= 1; n++)
-            {
-                if (j + n >= 0 && j + n < width)
-                {
-                    totalRed += currentRow[j + n].rgbtRed;
-                    totalGreen += currentRow[j + n].rgbtGreen;
-                    totalBlue += currentRow[j + n].rgbtBlue;
-                    pixelCount++;
-                }
-            }
-
-            // neighbours below
-            if (i < height - 1)
-            {
-                for (int n = -1; n <= 1; n++)
-                {
-                    if (j + n >= 0 && j + n < width)
-                    {
-                        totalRed += rowBelow[j + n].rgbtRed;
-                        totalGreen += rowBelow[j + n].rgbtGreen;
-                        totalBlue += rowBelow[j + n].rgbtBlue;
-                        pixelCount++;
+                        // if the current pixel's neighbours are inside the image
+                        if (
+                            j + l >= 0 &&
+                            j + l < width
+                        )
+                        {
+                            totalRed += rowsCopy[n][j + l].rgbtRed;
+                            totalGreen += rowsCopy[n][j + l].rgbtGreen;
+                            totalBlue += rowsCopy[n][j + l].rgbtBlue;
+                            pixelCount++;
+                        }
                     }
                 }
             }
@@ -105,15 +84,22 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
             image[i][j].rgbtBlue = round((float) totalBlue / pixelCount);
 
         }
-        // setup the rows for the next iteration
-        arrCopy(width, currentRow, rowAbove);
-        arrCopy(width, rowBelow, currentRow);
-        if (i < height - 1)
+
+        arrCopy(width, rowsCopy[1], rowsCopy[0]);
+        arrCopy(width, rowsCopy[2], rowsCopy[1]);
+
+        // if the next rowsCopy[2] is still inside the image
+        if (i + 2 < height)
         {
-            arrCopy(width, image[i + 2], rowBelow);
+            arrCopy(width, image[i + 2], rowsCopy[2]);
+            invalidRow = -1; // there would be no invalid row
+        }
+        else
+        {
+            // if not, then rowsCopy[2] will be an invalid row
+            invalidRow = 2;
         }
     }
-    return;
 }
 
 // Detect edges
@@ -127,12 +113,6 @@ void edges(int height, int width, RGBTRIPLE image[height][width])
     {
         for (int j = 0; j < width; j++)
         {
-            if (i == 2 && j == 3)
-            {
-                printf("chegou");
-            }
-            // compute Gx
-            // row above
             int GxRed = 0, GxGreen = 0, GxBlue = 0,
                 GyRed = 0, GyGreen = 0, GyBlue = 0;
 
