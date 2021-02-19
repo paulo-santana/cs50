@@ -116,7 +116,7 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
         arrCopy(width, rowsCopy[2], rowsCopy[1]);
 
         // if the next rowsCopy[2] is still inside the image
-        if (i + 2 < width)
+        if (i + 2 < height)
         {
             arrCopy(width, image[i + 2], rowsCopy[2]);
             invalidRow = -1; // there would be no invalid row
