@@ -162,15 +162,10 @@ void sort_pairs(void)
         // sort the pairs using the bubble sort algorithm
         for (int j = 0; j < pair_count - i; j++)
         {
-            int winnerPrefs = preferences[pairs[j].winner][pairs[j].loser];
-            int loserPrefs = preferences[pairs[j].loser][pairs[j].winner];
-            int difference = winnerPrefs - loserPrefs;
-
+            int winnerPrefs     = preferences[pairs[j].winner][pairs[j].loser];
             int nextWinnerPrefs = preferences[pairs[j + 1].winner][pairs[j + 1].loser];
-            int nextLoserPrefs = preferences[pairs[j + 1].loser][pairs[j + 1].winner];
-            int nextDifference = nextWinnerPrefs - nextLoserPrefs;
 
-            if (difference < nextDifference)
+            if (winnerPrefs < nextWinnerPrefs)
             {
                 pair tmpPair = pairs[j];
                 pairs[j] = pairs[j + 1];
@@ -212,7 +207,6 @@ bool createsCycle(int target, int start)
     if (start == target)
         return true;
 
-    bool foundCycle = false;
     for (int i = 0; i < candidate_count; i++)
     {
         // follow everyone that start has beaten to see if they lead to target
@@ -220,13 +214,13 @@ bool createsCycle(int target, int start)
         {
             if(createsCycle(target, i))
             {
-                foundCycle = true;
+                return true;
             }
         }
     }
 
     // if it didn't beat anyone, it definetly won't create a cycle
-    return foundCycle;
+    return false;
 }
 
 // Print the winner of the election
